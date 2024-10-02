@@ -1,10 +1,12 @@
-from passlib.context import CryptContext
-from app.users.dao import UsersDAO
-from datetime import datetime, timedelta,timezone
-from jose import jwt
-from pydantic import EmailStr
 import os
+from datetime import datetime, timedelta, timezone
+
 from dotenv import load_dotenv
+from jose import jwt
+from passlib.context import CryptContext
+from pydantic import EmailStr
+
+from app.users.dao import UsersDAO
 
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')

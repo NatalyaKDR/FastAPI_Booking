@@ -1,21 +1,19 @@
-from fastapi import APIRouter
+from datetime import date
 from typing import List
 
-from pydantic import parse_obj_as
+from fastapi import APIRouter, BackgroundTasks, Depends
+
 # from app.database import async_session_maker
 # from app.bookings.models import Bookings
 # from sqlalchemy import select
 from app.bookings.dao import BookingDAO
 from app.bookings.models import Bookings
 from app.bookings.schemas import SBooking
-from app.users.models import Users
-from fastapi import Depends
-from app.users.dependencies import get_current_user
-from datetime import date
 from app.exceptions import RoomCannotBeBookedException
 from app.tasks.tasks import send_booking_confirmation_email
-from fastapi import BackgroundTasks
-
+from app.users.dependencies import get_current_user
+from app.users.models import Users
+# from fastapi_versioning import version
 
 router=APIRouter(
     prefix="/bookings",
@@ -23,12 +21,14 @@ router=APIRouter(
 )
 
 @router.get('')
+# @version(1)
 async def get_bookings(user: Users=Depends(get_current_user)) -> List[SBooking]:
     print(user, type(user), user.email)
     result= await BookingDAO.find_all(user_id=user.id)
     return result
 
 @router.post('') 
+# @version(2)
 async def add_booking(
     background_tasks: BackgroundTasks,
     room_id: int, 

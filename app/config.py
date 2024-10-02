@@ -1,8 +1,12 @@
 from pydantic_settings import BaseSettings
 from sqlalchemy.engine.url import URL
+from typing import Literal
 
 
 class Settings(BaseSettings):
+    LOG_LEVEL:Literal["INFO", "DEBUG","WARNING","ERROR"]
+
+
     DB_HOST:str
     DB_PORT:int
     DB_USER:str

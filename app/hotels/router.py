@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Query
-from datetime import date, datetime, timedelta
-from app.hotels.schemas import SHotelInfo
-from typing import List
-from app.exceptions import CannotBookHotelForLongPeriod, DateFromCannotBeAfterDateTo
-from app.hotels.dao import HotelDAO
-from fastapi_cache.decorator import cache
 from asyncio import sleep
+from datetime import date, datetime, timedelta
+from typing import List
+
+from fastapi import APIRouter, Query
+from fastapi_cache.decorator import cache
+
+from app.exceptions import (CannotBookHotelForLongPeriod,
+                            DateFromCannotBeAfterDateTo)
+from app.hotels.dao import HotelDAO
+from app.hotels.schemas import SHotelInfo
 
 router = APIRouter(prefix="/hotels", tags=["Отели"])
 

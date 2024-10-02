@@ -1,25 +1,30 @@
-from fastapi import FastAPI, Query, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from app.bookings.router import router as router_bookings
-from app.users.router import router as router_users
-from app.hotels.router import router as router_hotels
-from app.pages.router import router as router_pages
-from app.images.router import router as router_images
-#для адмики
-from sqladmin import Admin
-from app.database import engine
-from app.admin.auth import authentication_backend
-from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
-#для кеширования с redis 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
+from fastapi import Depends, FastAPI, Query, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
+# from fastapi_versioning import VersionedFastAPI
 from redis import asyncio as aioredis
+#для адмики
+from sqladmin import Admin
+
+from app.admin.auth import authentication_backend
+from app.admin.views import BookingsAdmin, HotelsAdmin, RoomsAdmin, UsersAdmin
+from app.bookings.router import router as router_bookings
 from app.config import settings
+from app.database import engine
+from app.hotels.router import router as router_hotels
+from app.images.router import router as router_images
+from app.pages.router import router as router_pages
+from app.users.router import router as router_users
+
+from app.logger import logger
+import time
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]: 
@@ -31,6 +36,16 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(lifespan=lifespan)
 
+
+#Версионирование API
+# app = VersionedFastAPI(app,
+#     version_format='{major}',
+#     prefix_format='/v{major}',
+#     # description='Greet users with a nice message',
+#     # middleware=[
+#     #     Middleware(SessionMiddleware, secret_key='mysecretkey')
+#     # ]
+# )
 
 #подключаем статику
 app.mount('/static', StaticFiles(directory="app/static"), "static")
@@ -60,9 +75,22 @@ app.include_router(router_pages)
 app.include_router(router_images)
 
 
+
 # Подключение админки
 admin = Admin(app, engine, authentication_backend=authentication_backend)
 admin.add_view(UsersAdmin)
 admin.add_view(HotelsAdmin)
 admin.add_view(RoomsAdmin)
 admin.add_view(BookingsAdmin)
+
+
+# @app.middleware("http")
+# async def add_process_time_header(request: Request, call_next):
+#     start_time = time.perf_counter()
+#     response = await call_next(request)
+#     process_time = time.perf_counter() - start_time
+#     logger.info("Request execution time", extra={
+#         "process_time":round(process_time, 4)
+#     })
+#     # response.headers["X-Process-Time"] = str(process_time)
+#     return response

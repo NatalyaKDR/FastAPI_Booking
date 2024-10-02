@@ -1,13 +1,15 @@
-from fastapi import Depends,HTTPException, Request, status
-from jose import jwt, JWTError
+import os
 from datetime import datetime, timezone
+
+from dotenv import load_dotenv
+from fastapi import Depends, HTTPException, Request, status
+from jose import JWTError, jwt
+
+from app.exceptions import (IncorrectTokenFormatException,
+                            TokenAbsentException, TokenExpiredException,
+                            UserException)
 from app.users.dao import UsersDAO
 from app.users.models import Users
-from app.exceptions import TokenExpiredException,TokenAbsentException,IncorrectTokenFormatException,UserException 
-
-
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
