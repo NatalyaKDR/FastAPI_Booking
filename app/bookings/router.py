@@ -48,8 +48,7 @@ async def add_booking(
     booking_dict = SBooking.model_validate(booking).model_dump()
     
     # Передаем сериализуемый словарь в Celery
-    # send_booking_confirmation_email.delay(booking_dict, user.email)
-
+    # send 
     #вариант с Background Tasks 
     background_tasks.add_task(send_booking_confirmation_email, booking_dict, user.email)
     return  booking

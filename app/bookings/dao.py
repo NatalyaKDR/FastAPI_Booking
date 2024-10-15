@@ -27,7 +27,7 @@ class BookingDAO(BaseDAO):
                             or_(
                                 and_(
                                     Bookings.date_from >= date_from,
-                                    Bookings.date_from <= date_from,
+                                    Bookings.date_from <= date_to,
                                 ),
                                 and_(
                                     Bookings.date_from <= date_from,

@@ -6,6 +6,7 @@ from app.users.auth import authenticate_user, create_access_token
 from app.users.dependencies import get_current_user
 
 
+
 class AdminAuth(AuthenticationBackend):
     async def login(self, request: Request):
         form = await request.form()

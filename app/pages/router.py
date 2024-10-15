@@ -18,3 +18,11 @@ async def get_hotels_page(
     return templates.TemplateResponse(
         name="hotels.html", 
         context={"request":request, 'hotels':hotels})
+
+
+@router.get("/chat")
+def get_chat_page(request:Request):
+    return templates.TemplateResponse(
+        name='chat.html',
+        context={"request":request})
+    

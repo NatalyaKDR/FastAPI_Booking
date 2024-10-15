@@ -21,10 +21,12 @@ from app.hotels.router import router as router_hotels
 from app.images.router import router as router_images
 from app.pages.router import router as router_pages
 from app.users.router import router as router_users
+from app.chat.router import router as router_chat
 
 from app.logger import logger
 import time
 
+ 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]: 
@@ -73,6 +75,7 @@ app.include_router(router_bookings)
 app.include_router(router_hotels)
 app.include_router(router_pages)
 app.include_router(router_images)
+app.include_router(router_chat)
 
 
 
